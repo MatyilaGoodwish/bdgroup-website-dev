@@ -23,18 +23,7 @@ $(document).ready(function(){
 
    
 
-    /**
-     * user context
-     */
-    const currentUser = firebase.auth().onAuthStateChanged(function(user){
-        if(user){
-            console.log('passed');
-            profile.set('email', user.email);
-            return user.uid;
-        }else{
-            console.log('failed');
-        }
-    });
+   
     
     /**
      * cart datasource
@@ -43,13 +32,15 @@ $(document).ready(function(){
         data: []
     });
 
+    const myOrders = new kendo.data.DataSource({
+        data: []
+    })
 
      /**
      * bind data source with grid  for cart
      */
     const shopping = $('#shopping-bag').kendoGrid({
         dataSource: cart,
-         
         sortable: true,
         selectable: true,
         schema: {
@@ -59,21 +50,99 @@ $(document).ready(function(){
         }
        
     });
+
+    const recent = $('#recent').kendoGrid({
+        dataSource: myOrders,
+        sortable: true,
+        selectable: true       
+    });
     
+     /**
+     * user context
+     */
+    const currentUser = firebase.auth().onAuthStateChanged(function(user){
+        if(user){
+            profile.set('email', user.email);
+
+            firebase.firestore().collection('transactional_order').doc(user.uid).get()
+            .then(function(snapShot){
+               // console.log(snapShot.data());
+
+                myOrders.add(snapShot.data());
+
+                myOrders.sync();
+
+            //console.log(myOrders.data());
+            }).catch(function(error){
+                console.log(error);
+            });
+            
+            return user.uid;
+        }else{
+            location.replace('/');
+        }
+    });
     
 
     /**
      * user profile
      */
     const profile = kendo.observable({
-        checkOut: function(e){
-            firebase.firestore().collection('Transactions').doc(`${new Date().getFullYear()}_${new Date().getMonth() + 1}_${new Date().getDay()}_Order`).set({
-                sample: ""
-            })
-            .catch(error=>{
-                console.log(error.message);
-            })
+
+        soon: function(){
+            kendo.confirm('Coming soon later this year');
+        },
+        logout: function(){
+
+            firebase.auth().signOut();
+
+        },
+
+        clearCart: function(){
+
+            $("#shopping-bag").data("kendoGrid").dataSource.data([]);
+
+            cart.data([]);
+
             console.log(cart.data());
+        },
+
+        checkOut: function(e){
+             firebase.auth().onAuthStateChanged(function(user){
+                /**
+                 * use validated user
+                 */
+                if(user){
+                    for(let i = 0; i < cart.data().length; i++)
+                    {
+                        firebase.firestore().collection('transactional_order').doc(user.uid).set(
+                            JSON.parse(JSON.stringify(cart.data()[i]))
+                        ).catch(function(error){
+                            kendo.alert('Poor network connection');
+                        });
+
+
+
+
+                        firebase.firestore().collection('transactional_order').doc(user.uid).get()
+                        .then(function(snapShot){
+                            //console.log(snapShot.data());
+
+                            myOrders.add(snapShot.data());
+
+                            myOrders.sync();
+
+                            location.replace('account.html');
+
+                        //console.log(myOrders.data());
+                        }).catch(function(error){
+                            console.log(error);
+                        });
+  
+                    }
+                    //kendo.confirm('Your order has been processed');
+                }
+             })
         },
         email: "",
         
@@ -122,8 +191,7 @@ $(document).ready(function(){
                 Price: 'R4000',
                 Product: 'Website for Small business',
                 Support: '1 year',
-                Deposit: '20%',
-                command: "destroy"
+                Deposit: '20%'
             });
             
             /**

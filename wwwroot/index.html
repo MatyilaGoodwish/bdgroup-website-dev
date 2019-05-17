@@ -24,6 +24,8 @@
   <link href="css/creative.min.css" rel="stylesheet">
 
 
+  <link href="styles/kendo.common.min.css" rel="stylesheet">
+  <link href="styles/kendo.default-v2.min.css" rel="stylesheet">
 
 </head>
 
@@ -81,6 +83,7 @@
 Modals accounts
 
 -->
+<form>
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -91,15 +94,21 @@ Modals accounts
           </button>
         </div>
         <div class="modal-body">
-          ...
+          <h5>Email ID</h5>
+          <input type="email" value="demo@bdsoft.co.za" placeholder="Email" required class="form-control" data-bind="value: loginID">
+          <br/>
+          <h5>Password</h5>
+          <input type="password" required class="form-control" data-bind="value: loginPass">
+          <br/>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Login</button>
+          <button type="button" class="btn btn-primary" data-bind="click: loginSession">Login</button>
         </div>
       </div>
     </div>
   </div>
+</form>
 
   <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalTitle" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -111,11 +120,16 @@ Modals accounts
             </button>
           </div>
           <div class="modal-body">
-            ...
+              <h5>Email ID</h5>
+          <input type="email" placeholder="Email" required class="form-control" data-bind="value: regID">
+          <br/>
+          <h5>Password</h5>
+          <input type="password" required class="form-control" data-bind="value: regPass">
+          <br/>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Login</button>
+            <button type="button" class="btn btn-primary" data-bind="click: regSession">Register</button>
           </div>
         </div>
       </div>
@@ -326,7 +340,9 @@ Modals accounts
 
   <!-- Custom scripts for this template -->
   <script src="js/creative.min.js"></script>
-
+  <script src="js/firebase.js"></script>
+  <script src="js/kendo.all.min.js"></script>
+  <script src="js/front.min.js"></script>
 </body>
 
 </html>
