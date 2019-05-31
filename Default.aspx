@@ -8,17 +8,19 @@
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-      
-
+   
       <div class="container">
             <div class="row">
                   <div class="col-md-6">
                         <h2 class="display-2 text-muted">
-                              Website Notice
+                              Website Notice.
                         </h2>
                         <p class="lead">
                               We are currently down for maintenance on our website should you need anything kindly contact us directory on <br/>087 057-1581
                         </p>
+                  </div>
+                  <div class="col-md-6">
+                        <img src="images/home-right.png" class="w-100 h-100"/>
                   </div>
             </div>
       </div>
